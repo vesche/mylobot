@@ -37,7 +37,7 @@ async def end(request):
     return response.json({}, status=200)
 
 def run():
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=8080)
 
 if __name__ == '__main__':
     run()
