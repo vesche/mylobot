@@ -32,13 +32,13 @@ class Game:
         self.length = request.json['you']['length']
 
     def avoid_walls(self):
-        if self.head['x'] == self.width:
+        if self.head['x'] == self.width - 1:
             return 'down'
-        if self.head['x'] == 0:
+        if self.head['x'] == 1:
             return 'up'
         #if self.head['y'] == self.height:
         #    return 'right'
-        if self.head['y'] == 0:
+        if self.head['y'] == 1:
             return 'left'
         return 'right'
 
