@@ -46,13 +46,13 @@ async def index(request):
 
 @app.route('/start', methods=['POST',])
 async def start(request):
-    process_incoming(request)
+    game.process_incoming(request)
     print('****** START', game.__dict__)
     return response.json({}, status=200)
 
 @app.route('/move', methods=['POST',])
 async def move(request):
-    process_incoming(request)
+    game.process_incoming(request)
     print('****** MOVE', game.__dict__)
     direction = random.choice(['up', 'down', 'left', 'right'])
     shout = f'I am moving {direction}!'
