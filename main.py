@@ -31,7 +31,16 @@ class Game:
         self.head = request.json['you']['head']
         self.length = request.json['you']['length']
 
-game = Game()
+    def avoid_walls(self):
+        if self.head['x'] == self.width:
+            return 'down'
+        if self.head['x'] == 0:
+            return 'up'
+        #if self.head['y'] == self.height:
+        #    return 'right'
+        if self.head['y'] == 0:
+            return 'left'
+        return 'right'
 
 @app.route('/', methods=['GET',])
 async def index(request):
@@ -54,7 +63,7 @@ async def start(request):
 async def move(request):
     game.process_incoming(request)
     print('****** MOVE', game.__dict__)
-    direction = random.choice(['up', 'down', 'left', 'right'])
+    direction = game.avoid_walls()
     shout = f'I am moving {direction}!'
     return response.json({'move': direction, 'shout': shout}, status=200)
 
