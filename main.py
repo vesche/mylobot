@@ -34,12 +34,13 @@ class Game:
     def avoid_walls(self):
         if self.head['x'] == self.width - 1:
             return 'down'
+        if self.head['y'] == 0:
+            return 'left'
         if self.head['x'] == 0:
             return 'up'
         #if self.head['y'] == self.height:
         #    return 'right'
-        if self.head['y'] == 0:
-            return 'left'
+
         return 'right'
 
 game = Game()
