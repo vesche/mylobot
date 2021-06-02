@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import json
 import random
 from sanic import Sanic, response
@@ -37,7 +38,11 @@ async def end(request):
     return response.json({}, status=200)
 
 def run():
-    app.run(host='0.0.0.0', port=8080)
+    app.run(
+        host=os.environ.get('HOST', '0.0.0.0'),
+        port=os.environ.get('PORT', os.environ.get('PORT', 8080)),
+        access_log=True
+    )
 
 if __name__ == '__main__':
     run()
