@@ -42,6 +42,8 @@ class Game:
             return 'left'
         return 'right'
 
+game = Game()
+
 @app.route('/', methods=['GET',])
 async def index(request):
     return response.json({
