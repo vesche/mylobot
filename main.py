@@ -31,6 +31,7 @@ class Game:
         self.body = request.json['you']['body']
         self.head = request.json['you']['head']
         self.length = request.json['you']['length']
+        self.moving = 'right'
 
     def runner(self):
         if self.stack:
@@ -38,18 +39,25 @@ class Game:
         awc = self.anti_wall_collision()
         if awc:
             return awc
-        return 'right'
+        return self.moving
 
     def anti_wall_collision(self):
         if self.head['x'] == 0:
-            if self.head['y'] == 0:
-                return 'up'
-            return 'right'
+            if self.head['y'] == self.height - 1:
+                m = 'down'
+            else:
+                m = 'up'
+            self.stack.append('right')
+            self.moving = 'right'
+            return m
         if self.head['x'] == self.width - 1:
-            if self.head['y'] == self.width - 1:
-                return 'down'
-            return 'left'
-
+            if self.head['y'] == 0:
+                m = 'up'
+            else:
+                m = 'down'
+            self.stack.append('left')
+            self.moving = 'left'
+            return m
 
 game = Game()
 
