@@ -21,23 +21,12 @@ class Coord:
 class Game:
     def __init__(self):
         self.stack = list()
-    #    self.turn = int()
-    #    self.height = int()
-    #    self.width = int()
-    #    self.opponents = list()
-    #    self.food = list()
-    #    self.health = int()
-    #    self.body = list()
-    #    self.head = dict()
-    #    self.length = int()
-    #    self.shout = str()
 
     def process_incoming(self, request):
         self.turn = request.json['turn']
         self.height = request.json['board']['height']
         self.width = request.json['board']['width']
         self.opponents = [s for s in request.json['board']['snakes'] if s['name'] != tag]
-        # self.opponents_coords = [Coord(c['x'], c['y']) for c in opponent['body'] for opponent in self.opponents]
         self.opponents_coords = [Coord(c['x'], c['y']) for c in sum([opponent['body'] for opponent in self.opponents], [])]
         self.food = request.json['board']['food']
         self.health = request.json['you']['health']
@@ -73,9 +62,11 @@ class Game:
         # leggo
         # return random.choice([direction for direction, coord in coordinates.items() if not coord.collision])
 
+        foo = list()
         for direction, coord in coordinates.items():
             if not coord.collision:
-                return direction
+                foo.append(direction)
+        return random.choice(foo)
 
 game = Game()
 
