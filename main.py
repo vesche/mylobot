@@ -71,11 +71,11 @@ class Game:
             if (coord.x, coord.y) in [(c.x, c.y) for c in self.opponents_coords]:
                 coord.collision = True
         # leggo
-        return random.choice([direction for direction, coord in coordinates.items() if not coord.collision])
+        # return random.choice([direction for direction, coord in coordinates.items() if not coord.collision])
 
-        #for direction, coord in coordinates.items():
-        #    if not coord.collision:
-        #        return direction
+        for direction, coord in coordinates.items():
+            if not coord.collision:
+                return direction
 
 game = Game()
 
