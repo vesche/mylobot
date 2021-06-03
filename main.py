@@ -53,10 +53,10 @@ class Game:
         # evaluate collisions
         for direction, coord in self.coordinates.items():
             if any((
-                ((coord.y <= 0) and direction == 'down'),
-                ((coord.x <= 0) and direction == 'left'),
-                ((coord.y >= self.height-1) and direction == 'up'),
-                ((coord.x >= self.width-1) and direction == 'right'),
+                ((coord.y < 0) and direction == 'down'),
+                ((coord.x < 0) and direction == 'left'),
+                ((coord.y > self.height-1) and direction == 'up'),
+                ((coord.x > self.width-1) and direction == 'right'),
                 ((coord.x, coord.y) in [(c.x, c.y) for c in self.body_coords]),
                 ((coord.x, coord.y) in [(c.x, c.y) for c in self.opponents_coords]),
             )):
