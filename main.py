@@ -14,9 +14,9 @@ class Coord:
         self.y = y
         self.collision = False
     def __str__(self):
-        return f'Coord(x={self.x}, y={self.y})'
+        return f'Coord(x={self.x}, y={self.y}, collision={self.collision})'
     def __repr__(self):
-        return f'Coord(x={self.x}, y={self.y})'
+        return f'Coord(x={self.x}, y={self.y}, collision={self.collision})'
 
 class Game:
     def __init__(self):
@@ -35,6 +35,12 @@ class Game:
         self.head_x = request.json['you']['head']['x']
         self.head_y = request.json['you']['head']['y']
         self.length = request.json['you']['length']
+        self.coordinates = dict(
+            up = Coord(self.head_x, self.head_y+1),
+            down = Coord(self.head_x, self.head_y-1),
+            left = Coord(self.head_x-1, self.head_y),
+            right = Coord(self.head_x+1, self.head_y),
+        )
 
     def runner(self):
         if self.stack:
@@ -45,15 +51,8 @@ class Game:
         return awc
 
     def anti_wall_collision(self):
-        coordinates = dict(
-            up = Coord(self.head_x, self.head_y+1),
-            down = Coord(self.head_x, self.head_y-1),
-            left = Coord(self.head_x-1, self.head_y),
-            right = Coord(self.head_x+1, self.head_y),
-        )
-
         # evaluate collisions
-        for direction, coord in coordinates.items():
+        for direction, coord in self.coordinates.items():
             if any((
                 ((coord.y <= 0) and direction == 'down'),
                 ((coord.x <= 0) and direction == 'left'),
@@ -64,12 +63,18 @@ class Game:
             )):
                 coord.collision = True
 
+        for direction, coord in self.coordinates.items():
+            if not coord.collision:
+                print(self.coordinates)
+                return direction
+
         #li = list()
         #for direction, coord in coordinates.items():
         #    if not coord.collision:
         #        li.append(direction)
         #return random.choice(li)
-        return random.choice([d for d, c in coordinates.items() if not c.collision])
+
+        #return random.choice([d for d, c in self.coordinates.items() if not c.collision])
 
 game = Game()
 
