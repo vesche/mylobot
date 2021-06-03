@@ -10,7 +10,7 @@ app = Sanic(name=tag)
 bot_meta = {
     'apiversion': '1',
     'author': 'vesche',
-    'color': '#f00f00',
+    'color': '#FFFFFF',
     'head': 'fang',
     'tail': 'curled',
     'version': tag,
