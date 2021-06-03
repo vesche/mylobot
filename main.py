@@ -13,26 +13,32 @@ class Coord:
         self.x = x
         self.y = y
         self.collision = False
+    def __str__(self):
+        return f'Coord(x={self.x}, y={self.y})'
+    def __repr__(self):
+        return f'Coord(x={self.x}, y={self.y})'
 
 class Game:
-    def __init__(self):
-        self.turn = int()
-        self.height = int()
-        self.width = int()
-        self.opponents = list()
-        self.food = list()
-        self.health = int()
-        self.body = list()
-        self.head = dict()
-        self.length = int()
-        self.stack = list()
-        self.shout = str()
+    #def __init__(self):
+    #    self.turn = int()
+    #    self.height = int()
+    #    self.width = int()
+    #    self.opponents = list()
+    #    self.food = list()
+    #    self.health = int()
+    #    self.body = list()
+    #    self.head = dict()
+    #    self.length = int()
+    #    self.stack = list()
+    #    self.shout = str()
 
     def process_incoming(self, request):
         self.turn = request.json['turn']
         self.height = request.json['board']['height']
         self.width = request.json['board']['width']
         self.opponents = [s for s in request.json['board']['snakes'] if s['name'] != tag]
+        # self.opponents_coords = [Coord(c['x'], c['y']) for c in opponent['body'] for opponent in self.opponents]
+        self.opponents_coords = [Coord(c['x'], c['y']) for c in sum([opponent['body'] for opponent in self.opponents], [])]
         self.food = request.json['board']['food']
         self.health = request.json['you']['health']
         self.body = request.json['you']['body']
@@ -61,6 +67,8 @@ class Game:
             if (coord.x >= self.width) or (coord.x == 0) or (coord.y >= self.height) or (coord.y == 0):
                 coord.collision = True
             if (coord.x, coord.y) in [(c.x, c.y) for c in self.body_coords]:
+                coord.collision = True
+            if (coord.x, coord.y) in [(c.x, c.y) for c in self.opponents_coords]:
                 coord.collision = True
         # leggo
         for direction, coord in coordinates.items():
