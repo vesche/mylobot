@@ -45,11 +45,11 @@ class Game:
     def runner(self):
         if self.stack:
             return self.stack.pop(0)
-        awc = self.anti_wall_collision()
+        ac = self.anti_collision()
         # OR logic here...
-        return awc
+        return ac
 
-    def anti_wall_collision(self):
+    def anti_collision(self):
         # evaluate collisions
         for direction, coord in self.coordinates.items():
             if any((
@@ -64,14 +64,14 @@ class Game:
 
         print(self.coordinates)
 
-        # non-random
-        """
-        for direction, coord in self.coordinates.items():
-            if not coord.collision:
-                return direction
-        """
         # random
-        return random.choice([d for d, c in self.coordinates.items() if not c.collision])
+        if random.choice(range(10)) == 9:
+            return random.choice([d for d, c in self.coordinates.items() if not c.collision])
+        # non-random
+        else:
+            for direction, coord in self.coordinates.items():
+                if not coord.collision:
+                    return direction
 
 game = Game()
 
