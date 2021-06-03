@@ -19,7 +19,8 @@ class Coord:
         return f'Coord(x={self.x}, y={self.y})'
 
 class Game:
-    #def __init__(self):
+    def __init__(self):
+        self.stack = list()
     #    self.turn = int()
     #    self.height = int()
     #    self.width = int()
@@ -29,7 +30,6 @@ class Game:
     #    self.body = list()
     #    self.head = dict()
     #    self.length = int()
-    #    self.stack = list()
     #    self.shout = str()
 
     def process_incoming(self, request):
