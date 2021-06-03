@@ -8,6 +8,12 @@ from sanic import Sanic, response
 tag = 'mylobot-mark-i'
 app = Sanic(name=tag)
 
+class Coord:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.collision = False
+
 class Game:
     def __init__(self):
         self.turn = int()
@@ -20,6 +26,7 @@ class Game:
         self.head = dict()
         self.length = int()
         self.stack = list()
+        self.shout = str()
 
     def process_incoming(self, request):
         self.turn = request.json['turn']
@@ -29,9 +36,10 @@ class Game:
         self.food = request.json['board']['food']
         self.health = request.json['you']['health']
         self.body = request.json['you']['body']
-        self.head = request.json['you']['head']
+        self.body_coords = [Coord(c['x'], c['y']) for c in self.body]
+        self.head_x = request.json['you']['head']['x']
+        self.head_y = request.json['you']['head']['y']
         self.length = request.json['you']['length']
-        self.moving = 'right'
 
     def runner(self):
         if self.stack:
@@ -42,22 +50,22 @@ class Game:
         return self.moving
 
     def anti_wall_collision(self):
-        if self.head['x'] == 0:
-            if self.head['y'] == self.height - 1:
-                m = 'down'
-            else:
-                m = 'up'
-            self.stack += ['right', 'right', 'right']
-            self.moving = 'right'
-            return m
-        if self.head['x'] == self.width - 1:
-            if self.head['y'] == 0:
-                m = 'up'
-            else:
-                m = 'down'
-            self.stack += ['left', 'left', 'left']
-            self.moving = 'left'
-            return m
+        coordinates = dict(
+            up = Coord(self.head_x, self.head_y+1),
+            down = Coord(self.head_x, self.head_y-1),
+            left = Coord(self.head_x-1, self.head_y),
+            right = Coord(self.head_x+1, self.head_y),
+        )
+        # evaluate collisions
+        for direction, coord in coordinates.items():
+            if (coord.x >= self.width - 1) or (coord.x == 0) or (coord.y >= self.height - 1) or (coord.y == 0):
+                coord.collision = True
+            if (coord.x, coord.y) in [(c.x, c.y) for c in self.body_coords]:
+                coord.collision = True
+        # leggo
+        for direction, coord in coordinates.items():
+            if not coord.collision:
+                return direction
 
 game = Game()
 
