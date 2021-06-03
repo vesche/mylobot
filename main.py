@@ -46,8 +46,7 @@ class Game:
         if self.stack:
             return self.stack.pop(0)
         awc = self.anti_wall_collision()
-        #if awc:
-        #    return awc
+        # OR logic here...
         return awc
 
     def anti_wall_collision(self):
@@ -63,18 +62,15 @@ class Game:
             )):
                 coord.collision = True
 
+        # non-random
+        """
         for direction, coord in self.coordinates.items():
             if not coord.collision:
                 print(self.coordinates)
                 return direction
-
-        #li = list()
-        #for direction, coord in coordinates.items():
-        #    if not coord.collision:
-        #        li.append(direction)
-        #return random.choice(li)
-
-        #return random.choice([d for d, c in self.coordinates.items() if not c.collision])
+        """
+        # random
+        return random.choice([d for d, c in self.coordinates.items() if not c.collision])
 
 game = Game()
 
@@ -92,20 +88,20 @@ async def index(request):
 @app.route('/start', methods=['POST',])
 async def start(request):
     game.process_incoming(request)
-    print('****** START', game.__dict__)
+    # print('****** START', game.__dict__)
     return response.json({}, status=200)
 
 @app.route('/move', methods=['POST',])
 async def move(request):
     game.process_incoming(request)
-    print('****** MOVE', game.__dict__)
+    # print('****** MOVE', game.__dict__)
     direction = game.runner()
     shout = f'I am moving {direction}!'
     return response.json({'move': direction, 'shout': shout}, status=200)
 
 @app.route('/end', methods=['POST',])
 async def end(request):
-    print('****** END', request.json)
+    # print('****** END', request.json)
     return response.json({}, status=200)
 
 def run():
