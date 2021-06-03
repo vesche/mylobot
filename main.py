@@ -10,7 +10,7 @@ app = Sanic(name=tag)
 bot_meta = {
     'apiversion': '1',
     'author': 'vesche',
-    'color': '#FFFFFF',
+    'color': '#888888',
     'head': 'fang',
     'tail': 'curled',
     'version': tag,
@@ -31,30 +31,27 @@ class Game:
         self.shout = str()
         self.stack = list()
 
-    def process_incoming(self, request):
-        self.turn   = request.json['turn']
-        self.height = request.json['board']['height']
-        self.width  = request.json['board']['width']
-        self.food   = request.json['board']['food']
-        self.health = request.json['you']['health']
-        self.head_x = request.json['you']['head']['x']
-        self.head_y = request.json['you']['head']['y']
-        self.length = request.json['you']['length']
-
+    def process_incoming(self, data):
+        self.turn   = data['turn']
+        self.height = data['board']['height']
+        self.width  = data['board']['width']
+        self.food   = data['board']['food']
+        self.health = data['you']['health']
+        self.head_x = data['you']['head']['x']
+        self.head_y = data['you']['head']['y']
+        self.length = data['you']['length']
         # my snake
-        self.body = request.json['you']['body']
+        self.body = data['you']['body']
         self.body_coords = [Coord(c['x'], c['y']) for c in self.body]
-
         # other snakes
         self.opponents = [
-            i for i in request.json['board']['snakes'] if i['name'] != tag
+            i for i in data['board']['snakes'] if i['name'] != tag
         ]
         self.opponents_coords = [
             Coord(c['x'], c['y']) for c in sum(
                 [opponent['body'] for opponent in self.opponents], list()
             )
         ]
-
         # directional data
         self.coordinates = dict(
             up = Coord(self.head_x, self.head_y+1),
@@ -104,13 +101,13 @@ async def index(request):
 
 @app.route('/start', methods=['POST',])
 async def start(request):
-    game.process_incoming(request)
+    game.process_incoming(request.json)
     print('*** START ***', game.__dict__)
     return response.json({}, status=200)
 
 @app.route('/move', methods=['POST',])
 async def move(request):
-    game.process_incoming(request)
+    game.process_incoming(request.json)
     print('*** MOVE ***', game.__dict__)
     return response.json({'move': game.runner(), 'shout': game.shout}, status=200)
 
