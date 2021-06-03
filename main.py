@@ -62,11 +62,12 @@ class Game:
             )):
                 coord.collision = True
 
+        print(self.coordinates)
+
         # non-random
         """
         for direction, coord in self.coordinates.items():
             if not coord.collision:
-                print(self.coordinates)
                 return direction
         """
         # random
