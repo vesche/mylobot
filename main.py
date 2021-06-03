@@ -19,6 +19,7 @@ class Game:
         self.body = list()
         self.head = dict()
         self.length = int()
+        self.stack = list()
 
     def process_incoming(self, request):
         self.turn = request.json['turn']
@@ -31,17 +32,24 @@ class Game:
         self.head = request.json['you']['head']
         self.length = request.json['you']['length']
 
-    def avoid_walls(self):
-        if self.head['x'] == self.width - 1:
-            return 'down'
-        if self.head['y'] == 0:
-            return 'left'
-        if self.head['x'] == 0:
-            return 'up'
-        #if self.head['y'] == self.height:
-        #    return 'right'
-
+    def runner(self):
+        if self.stack:
+            return self.stack.pop(0)
+        awc = self.anti_wall_collision()
+        if awc:
+            return awc
         return 'right'
+
+    def anti_wall_collision(self):
+        if self.head['x'] == 0:
+            if self.head['y'] == 0:
+                return 'up'
+            return 'right'
+        if self.head['x'] == self.width - 1:
+            if self.head['y'] == self.width - 1:
+                return 'down'
+            return 'left'
+
 
 game = Game()
 
@@ -66,7 +74,7 @@ async def start(request):
 async def move(request):
     game.process_incoming(request)
     print('****** MOVE', game.__dict__)
-    direction = game.avoid_walls()
+    direction = game.runner()
     shout = f'I am moving {direction}!'
     return response.json({'move': direction, 'shout': shout}, status=200)
 
