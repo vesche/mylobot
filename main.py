@@ -40,9 +40,9 @@ class Game:
         if self.stack:
             return self.stack.pop(0)
         awc = self.anti_wall_collision()
-        if awc:
-            return awc
-        return self.moving
+        #if awc:
+        #    return awc
+        return awc
 
     def anti_wall_collision(self):
         coordinates = dict(
@@ -51,6 +51,7 @@ class Game:
             left = Coord(self.head_x-1, self.head_y),
             right = Coord(self.head_x+1, self.head_y),
         )
+
         # evaluate collisions
         for direction, coord in coordinates.items():
             if (coord.x >= self.width) or (coord.x == 0) or (coord.y >= self.height) or (coord.y == 0):
@@ -59,14 +60,12 @@ class Game:
                 coord.collision = True
             if (coord.x, coord.y) in [(c.x, c.y) for c in self.opponents_coords]:
                 coord.collision = True
-        # leggo
-        # return random.choice([direction for direction, coord in coordinates.items() if not coord.collision])
 
-        foo = list()
-        for direction, coord in coordinates.items():
-            if not coord.collision:
-                foo.append(direction)
-        return random.choice(foo)
+        #li = list()
+        #for direction, coord in coordinates.items():
+        #    if not coord.collision:
+        #        li.append(direction)
+        return random.choice([d for d, c in coordinates.items() if not c.collision])
 
 game = Game()
 
