@@ -54,8 +54,16 @@ class Game:
 
         # evaluate collisions
         for direction, coord in coordinates.items():
-            if (coord.x >= self.width-1) or (coord.x == 0) or (coord.y >= self.height-1) or (coord.y == 0):
+            if (coord.x == 0) and direction == 'left':
                 coord.collision = True
+            if (coord.x >= self.width-1) and direction == 'right':
+                coord.collision = True
+            if (coord.y == 0) and direction == 'down':
+                coord.collision = True
+            if (coord.y >= self.height-1) and direction == 'up':
+                coord.collision = True
+            #if (coord.x >= self.width-1) or (coord.x == 0) or (coord.y >= self.height-1) or (coord.y == 0):
+            #    coord.collision = True
             if (coord.x, coord.y) in [(c.x, c.y) for c in self.body_coords]:
                 coord.collision = True
             if (coord.x, coord.y) in [(c.x, c.y) for c in self.opponents_coords]:
