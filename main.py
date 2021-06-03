@@ -47,7 +47,7 @@ class Game:
                 m = 'down'
             else:
                 m = 'up'
-            self.stack.append('right')
+            self.stack += ['right', 'right', 'right']
             self.moving = 'right'
             return m
         if self.head['x'] == self.width - 1:
@@ -55,7 +55,7 @@ class Game:
                 m = 'up'
             else:
                 m = 'down'
-            self.stack.append('left')
+            self.stack += ['left', 'left', 'left']
             self.moving = 'left'
             return m
 
