@@ -65,7 +65,7 @@ class Game:
         print(self.coordinates)
 
         # random (based on board size)
-        if random.choice(range(self.height)) == 0:
+        if random.choice(9) == 3:
             return random.choice([d for d, c in self.coordinates.items() if not c.collision])
         # non-random
         else:
